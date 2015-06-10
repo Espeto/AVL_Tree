@@ -14,10 +14,10 @@
 
 //Defines the base of main structure
 struct tree{
+    int level;
     int value;
     int balance;
-    struct tree *left;
-    struct tree *right;
+    struct tree *left, *right;
 };
 
 //Defines 'node' as a type
@@ -73,8 +73,8 @@ void simpleLeft(node *root){
     r_aux = root->right;
     f_aux = root;
     
+    f_aux->right = r_aux->left;
     r_aux->left = f_aux;
-    f_aux->right = NULL;
 }
 
 //Simple right rotation
@@ -84,8 +84,8 @@ void simpleRight(node *root){
     l_aux = root->left;
     f_aux = root;
     
+    f_aux->left = l_aux->right;
     l_aux->right = f_aux;
-    f_aux->left = NULL;
 }
 
 //Double left rotation
