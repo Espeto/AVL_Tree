@@ -18,7 +18,7 @@ struct tree {
     int level;
     int value;
     int balance;
-    struct tree *left, *right;
+    struct tree *left, *right, *dad;
 };
 
 //Defines 'node' as a type
@@ -34,9 +34,50 @@ struct queue {
 //Define queue as a type named 'list'
 typedef struct queue list;
 
-int main(int argc, char** argv) {
+node *create(void);
+int menu(void);
+void insert(node *root, int numb);
+void printVector(node *root);
+void enqueue(list *h, list *t, node *v);
+node *dequeue(list *h);
+list *startQueue(void);
 
-    return (EXIT_SUCCESS);
+int main() {
+
+    node *tree;
+    int option, val, fset = 0;
+
+    //tree = startTree();
+
+
+
+    do {
+        option = menu();
+
+        switch (option) {
+            case 1:
+                printf("Digit a number:\n");
+                scanf("%d", &val);
+                if (!fset) {
+                    tree = create();
+                    tree->dad = NULL;
+                    tree->level = 0;
+                    tree->value = val;
+                    fset = 1;
+                } else
+                    insert(tree, val);
+                break;
+            case 2:
+                printVector(tree);
+                break;
+            default:
+                exit(0);
+                break;
+        }
+
+    } while (option);
+
+    return (0);
 }
 
 //Function that initialize the tree
@@ -56,13 +97,13 @@ node *create(void) {
 int menu(void) {
     int option;
 
-    do {
-        printf("\t===== MENU =====\n");
-        printf("\t1 - INSERT\n");
-        printf("\t2 - PRINT\n");
-        printf("\t3 - EXIT\n");
-        scanf("%d", &option);
-    } while (option < 1 && option > 3);
+
+    printf("\n\t===== MENU =====\n");
+    printf("\t1 - INSERT\n");
+    printf("\t2 - PRINT\n");
+    printf("\t3 - EXIT\n");
+    scanf("%d", &option);
+    
     getchar();
 
     return option;
@@ -95,10 +136,11 @@ void insert(node *root, int numb) {
     }
     if (find) {
         printf("===\tNumber already exists in the tree\t===\n");
-    }
-    else {
+    } else {
         new = create();
         new->value = numb;
+        new->dad = aux;
+        new->level = aux->level + 1;
 
         if (set == 1) {
             aux->left = new;
@@ -106,6 +148,27 @@ void insert(node *root, int numb) {
             aux->right = new;
         }
     }
+}
+
+void printVector(node *root) {
+
+    if (root == NULL) return;
+
+    else {
+        if (root->left != NULL)
+            printVector(root -> left);
+
+        else printf("X <- ");
+
+        printf("%d ", root -> value);
+
+        if (root->right != NULL)
+            printVector(root -> right);
+
+        else printf("-> X ");
+
+    }
+
 }
 
 //Simple left rotation
